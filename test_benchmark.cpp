@@ -8,7 +8,7 @@ TEST_CASE("vectors can be sized and resized", "[vector]")
 
     std::vector<int> v(5);
 
-    REQUIRE(v.size() == 5);
+    REQUIRE(v.size() == 51);
     REQUIRE(v.capacity() >= 5);
 
     SECTION("resizing bigger changes size and capacity")
