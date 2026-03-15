@@ -1,26 +1,42 @@
 #include <catch2/catch_test_macros.hpp>
-#include <catch2/benchmark/catch_benchmark.hpp>
+#include <vector>
 
-#include <cstdint>
-
-uint64_t fibonacci(uint64_t number)
+TEST_CASE("vectors can be sized and resized", "[vector]")
 {
-    return number < 2 ? number : fibonacci(number - 1) + fibonacci(number - 2);
-}
 
-TEST_CASE("Benchmark Fibonacci", "[!benchmark]")
-{
-    REQUIRE(fibonacci(5) == 51);
+    // For each section, vector v is anew:
 
-    REQUIRE(fibonacci(20) == 6'765);
-    BENCHMARK("fibonacci 20")
+    std::vector<int> v(5);
+
+    REQUIRE(v.size() == 5);
+    REQUIRE(v.capacity() >= 5);
+
+    SECTION("resizing bigger changes size and capacity")
     {
-        return fibonacci(20);
-    };
+        v.resize(10);
 
-    REQUIRE(fibonacci(25) == 75'025);
-    BENCHMARK("fibonacci 25")
+        REQUIRE(v.size() == 10);
+        REQUIRE(v.capacity() >= 10);
+    }
+    SECTION("resizing smaller changes size but not capacity")
     {
-        return fibonacci(25);
-    };
+        v.resize(0);
+
+        REQUIRE(v.size() == 0);
+        REQUIRE(v.capacity() >= 5);
+    }
+    SECTION("reserving bigger changes capacity but not size")
+    {
+        v.reserve(10);
+
+        REQUIRE(v.size() == 5);
+        REQUIRE(v.capacity() >= 10);
+    }
+    SECTION("reserving smaller does not change size or capacity")
+    {
+        v.reserve(0);
+
+        REQUIRE(v.size() == 5);
+        REQUIRE(v.capacity() >= 5);
+    }
 }
